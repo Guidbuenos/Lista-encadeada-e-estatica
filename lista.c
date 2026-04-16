@@ -94,4 +94,91 @@ void RemoverListaEstatica(ListaEstatica *Lista, const char* texto) {
 
     Lista ->quantidade--;
     printf("Texto \"%s\" removido com sucesso.\n", texto);
+
 }
+
+
+void ListarListaEstatica(const ListaEstatica *Lista) {
+    if (Lista->quantidade == 0) {
+        printf("A lista está vazia.\n");
+        return;
+    }
+    printf("Elementos da lista:\n");
+    for (int i = 0; i < Lista->quantidade; i++) {
+        printf("\"%s\"\n", Lista->dados[i]);
+    }
+    printf("]\n");
+}
+
+
+
+void iniciarListaencadeada(Listaencadeada *Lista) {
+    *Lista = NULL;
+}
+
+
+void inserirListaencadeada(Listaencadeada *Lista, const char* texto) {
+    No *novoNo = (No*)malloc(sizeof(No));
+    if (!novoNo) {
+        printf("Erro ao alocar memória para novo nó.\n");
+        return;
+    }
+    novoNo->dado = (char*)malloc(strlen(texto) + 1);
+    if (!novoNo->dado) {
+        printf("Erro ao alocar memória para o dado do nó.\n");
+        free(novoNo);
+        return;
+    }
+    strcpy(novoNo->dado, texto);
+    novoNo->proximo = *Lista;
+    *Lista = novoNo;
+    printf("Texto \"%s\" inserido com sucesso.\n", texto);
+}
+
+void removerListaencadeada(Listaencadeada *Lista, const char* texto) {
+    No *atual = *Lista, *anterior = NULL;
+    while (atual != NULL && strcmp(atual->dado, texto) != 0) {
+        anterior = atual;
+        atual = atual->proximo;
+    }
+
+    if (atual == NULL) {
+        printf("Texto \"%s\" não encontrado na lista.\n", texto);
+        return;
+    }
+    if (anterior == NULL) {
+        *Lista = atual->proximo;
+    } else {
+        anterior->proximo = atual->proximo;
+    }
+    free(atual->dado);
+    free(atual);
+    printf("Texto \"%s\" removido com sucesso.\n", texto);
+}
+
+void listarListaencadeada(const Listaencadeada *Lista) {
+    if (*Lista == NULL) {
+        printf("A lista está vazia.\n");
+        return;
+    }
+    printf("Elementos da lista:\n");
+    No *atual = *Lista;
+    while (atual != NULL) {
+        printf("\"%s\"\n", atual->dado);
+        atual = atual->proximo;
+    }
+    printf("]\n");
+}
+
+void liberarListaencadeada(Listaencadeada *Lista) {
+    No *atual = *Lista;
+    while (atual != NULL) {
+        No *temp = atual;
+        atual = atual->proximo;
+        free(temp->dado);
+        free(temp);
+    }
+    *Lista = NULL;
+}
+
+
